@@ -1,6 +1,7 @@
 import { Fragment, useState } from 'react'
 import { Dialog, Listbox, Transition } from '@headlessui/react'
 import { CheckIcon, SelectorIcon } from '@heroicons/react/solid'
+import { ethers } from "ethers";
 
 const people = [
     {
@@ -74,6 +75,12 @@ import HomePage from "../pages";
 export default function Layout({ children }) {
     const [selected, setSelected] = useState(people[3])
     const [open, setOpen] = useState(false)
+
+    const metaMaskConnect = async ()=> {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        await provider.send("eth_requestAccounts", []);
+        const signer = provider.getSigner()
+    }
 
     return (
         <div className="w-full flex flex-col items-center">
@@ -183,7 +190,7 @@ export default function Layout({ children }) {
                                     >
                                         <div className="relative inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-sm sm:w-full sm:p-6">
                                             <div>
-                                                <div>
+                                                <div className='flex flex-col items-center justify-center'>
                                                     <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                                                         User Name:
                                                     </label>
@@ -196,18 +203,13 @@ export default function Layout({ children }) {
                                                             placeholder="Jack"
                                                         />
                                                     </div>
-                                                    <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                                                        User Avatar:
-                                                    </label>
-                                                    <div className="mt-1">
-                                                        <input
-                                                            type="text"
-                                                            name="avatar-url"
-                                                            id="avatar"
-                                                            className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-2 border-gray-300 rounded-md"
-                                                            placeholder="Avatar Url"
-                                                        />
-                                                    </div>
+                                                    <button
+                                                        type="button"
+                                                        className="inline-flex w-[8vw] h-[41px] mt-6 items-center justify-center border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                                        onClick={metaMaskConnect}
+                                                    >
+                                                        Connect Wallet
+                                                    </button>
                                                 </div>
                                             </div>
                                             <div className="mt-5 sm:mt-6">
