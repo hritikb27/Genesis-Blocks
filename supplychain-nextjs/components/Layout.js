@@ -2,6 +2,7 @@ import { Fragment, useState } from 'react'
 import { Dialog, Listbox, Transition } from '@headlessui/react'
 import { CheckIcon, SelectorIcon } from '@heroicons/react/solid'
 import { ethers } from "ethers";
+import ABI from "./ABI.json"
 
 const people = [
     {
@@ -79,7 +80,13 @@ export default function Layout({ children }) {
     const metaMaskConnect = async ()=> {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         await provider.send("eth_requestAccounts", []);
-        const signer = provider.getSigner()
+        const signer = provider.getSigner();
+
+        const Supplyaddress = "0xab3183780f605751b7833243381c978fb6b42baf";
+
+        const SupplyContract = new ethers.Contract(Supplyaddress, ABI, provider);
+        const users = await SupplyContract.getUsers();
+        console.log(users)
     }
 
     return (
