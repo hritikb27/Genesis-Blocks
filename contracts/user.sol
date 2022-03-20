@@ -49,12 +49,13 @@ contract User {
     return userAddresstoId[_userAddress];
   }
 
-  function addNewUser(string memory _userName, address userAddress) external returns(uint) {
+  function addNewUser(string memory _userName, address _userAddress) external returns(uint) {
 
    // userCredentials[userId]= userName;
    uint temp_userId= userId;
-    users.push(UserCredentials(userId,_userName, userAddress));
-    userIdtoAddress[userId] = userAddress;
+    users.push(UserCredentials(userId,_userName, _userAddress));
+    userIdtoAddress[userId] = _userAddress;
+    userAddresstoId[_userAddress] = _userId;
     userId++;
      emit UserAdded(temp_userId);
     return temp_userId;
