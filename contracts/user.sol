@@ -43,16 +43,21 @@ contract User {
   uint userId=1;
   UserCredentials[] users;
   mapping(uint => address) public userIdtoAddress;
-
+  mapping (address => uint) userAddresstoId;
+  
+  function getIdfromAddress(address _userAddress) external view returns (uint) {
+    return userAddresstoId[_userAddress];
+  }
 
   function addNewUser(string memory _userName, address userAddress) external returns(uint) {
 
    // userCredentials[userId]= userName;
+   uint temp_userId= userId;
     users.push(UserCredentials(userId,_userName, userAddress));
     userIdtoAddress[userId] = userAddress;
     userId++;
-     emit UserAdded(userId);
-    return userId;
+     emit UserAdded(temp_userId);
+    return temp_userId;
 
    
   }
