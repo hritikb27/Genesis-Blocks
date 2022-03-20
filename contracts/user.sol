@@ -3,10 +3,12 @@ pragma solidity >=0.4.22 <0.9.0;
 contract User {
 
   struct Stock {
+    uint nodeId;
     uint itemId;
     string itemName;
     uint cost;
     bool isRetail;
+    string location;
 
   }
   struct ReceivedOrder {
@@ -35,6 +37,7 @@ contract User {
   struct UserCredentials{
     uint userId;
     string userName;
+    address userAddress;
   }
 
   uint userId=1;
@@ -45,7 +48,7 @@ contract User {
   function addNewUser(string memory _userName, address userAddress) external returns(uint) {
 
    // userCredentials[userId]= userName;
-    users.push(UserCredentials(userId,_userName));
+    users.push(UserCredentials(userId,_userName, userAddress));
     userIdtoAddress[userId] = userAddress;
     userId++;
      emit UserAdded(userId);
@@ -85,9 +88,9 @@ contract User {
       return userRequestedOrder[_userId];
   }
 
-  function updateStockforBuyer(uint _buyerId,  uint _itemId,  string memory _itemName, bool _isRetail, uint _cost) internal {
+  function updateStockforBuyer(uint _nodeId, uint _buyerId,  uint _itemId,  string memory _itemName, bool _isRetail, uint _cost, string memory _location) internal {
 
-      userStock[_buyerId].push(Stock(_itemId, _itemName,_cost,_isRetail));
+      userStock[_buyerId].push(Stock(_nodeId, _itemId, _itemName,_cost,_isRetail, _location));
       userIdtoItemIdtoStockInd[_buyerId][_itemId] = userStock[_buyerId].length -1;
   }
 
