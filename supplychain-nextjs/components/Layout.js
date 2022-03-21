@@ -2,7 +2,7 @@ import { Fragment, useState } from 'react'
 import { Dialog, Listbox, Transition } from '@headlessui/react'
 import { CheckIcon, SelectorIcon } from '@heroicons/react/solid'
 import { ethers } from "ethers";
-import ABI from "./ABI.json"
+import AbiJson from "./ABI.json"
 
 const people = [
     {
@@ -78,15 +78,42 @@ export default function Layout({ children }) {
     const [open, setOpen] = useState(false)
 
     const metaMaskConnect = async ()=> {
+        const Supplyaddress = "0xeb589d38a1fb9ce91c917b80a6736c3f8d70ba74";
         const provider = new ethers.providers.Web3Provider(window.ethereum);
-        await provider.send("eth_requestAccounts", []);
         const signer = provider.getSigner();
-
-        const Supplyaddress = "0xab3183780f605751b7833243381c978fb6b42baf";
-
-        const SupplyContract = new ethers.Contract(Supplyaddress, ABI, provider);
+        await provider.send("eth_requestAccounts", []);
+        const currentAddress = await signer.getAddress();
+        const abi = AbiJson.output.abi;
+        const SupplyContract = new ethers.Contract(Supplyaddress, abi, signer);
         const users = await SupplyContract.getUsers();
-        console.log(users)
+        const userID = await SupplyContract.getIdfromAddress(currentAddress);
+        const userIdInt = userID.toNumber();
+        
+        let isUserFound = false;
+        
+        async function checkUser(){
+            users.map(async(user)=>{
+                if(user.userAddress===currentAddress){
+                    isUserFound = true;
+                    alert('User already exists')
+                    const userData = await SupplyContract.getuserMetadata(userIdInt);
+                    console.log(userData)
+                }
+            })
+            
+            if(!isUserFound){
+                const userName = prompt("Enter a username: ")
+                console.log(userName, currentAddress);
+                const userID = await SupplyContract.addNewUser(userName, currentAddress);
+                setTimeout(()=>console.log(userID), 5000)
+
+            }
+        }
+        
+        checkUser();
+
+        
+        // console.log(users)
     }
 
     return (
@@ -164,9 +191,9 @@ export default function Layout({ children }) {
                     <button
                         type="button"
                         className="inline-flex w-[6vw] md:w-[8vw] h-[41px] mr-4 mt-6 items-center justify-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                        onClick={() => setOpen(prev => setOpen(!prev))}
+                        onClick={metaMaskConnect}
                     >
-                        Add User
+                        Connect Wallet
                         <Transition.Root show={open} as={Fragment}>
                             <Dialog as="div" className="fixed z-10 inset-0 overflow-y-auto" onClose={setOpen}>
                                 <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -213,7 +240,7 @@ export default function Layout({ children }) {
                                                     <button
                                                         type="button"
                                                         className="inline-flex w-[8vw] h-[41px] mt-6 items-center justify-center border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                                        onClick={metaMaskConnect}
+                                                        
                                                     >
                                                         Connect Wallet
                                                     </button>

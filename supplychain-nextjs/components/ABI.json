@@ -98,7 +98,7 @@
 					},
 					{
 						"internalType": "address",
-						"name": "userAddress",
+						"name": "_userAddress",
 						"type": "address"
 					}
 				],
@@ -121,6 +121,11 @@
 						"type": "uint256"
 					},
 					{
+						"internalType": "string",
+						"name": "_userName",
+						"type": "string"
+					},
+					{
 						"internalType": "uint256",
 						"name": "_itemId",
 						"type": "uint256"
@@ -128,6 +133,11 @@
 					{
 						"internalType": "string",
 						"name": "_itemName",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_location",
 						"type": "string"
 					},
 					{
@@ -158,6 +168,16 @@
 						"internalType": "uint256",
 						"name": "_userId",
 						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "_userName",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_location",
+						"type": "string"
 					},
 					{
 						"internalType": "uint256",
@@ -193,14 +213,49 @@
 			{
 				"inputs": [
 					{
+						"internalType": "address",
+						"name": "_userAddress",
+						"type": "address"
+					}
+				],
+				"name": "getIdfromAddress",
+				"outputs": [
+					{
 						"internalType": "uint256",
-						"name": "_itemId",
+						"name": "",
 						"type": "uint256"
 					}
 				],
-				"name": "getHistory",
-				"outputs": [],
-				"stateMutability": "nonpayable",
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_node",
+						"type": "uint256"
+					}
+				],
+				"name": "getPrecedents",
+				"outputs": [
+					{
+						"internalType": "string[]",
+						"name": "",
+						"type": "string[]"
+					},
+					{
+						"internalType": "string[]",
+						"name": "",
+						"type": "string[]"
+					},
+					{
+						"internalType": "string[]",
+						"name": "",
+						"type": "string[]"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -304,6 +359,11 @@
 						"components": [
 							{
 								"internalType": "uint256",
+								"name": "nodeId",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
 								"name": "itemId",
 								"type": "uint256"
 							},
@@ -321,6 +381,11 @@
 								"internalType": "bool",
 								"name": "isRetail",
 								"type": "bool"
+							},
+							{
+								"internalType": "string",
+								"name": "location",
+								"type": "string"
 							}
 						],
 						"internalType": "struct User.Stock[]",
@@ -346,6 +411,11 @@
 								"internalType": "string",
 								"name": "userName",
 								"type": "string"
+							},
+							{
+								"internalType": "address",
+								"name": "userAddress",
+								"type": "address"
 							}
 						],
 						"internalType": "struct User.UserCredentials[]",
@@ -370,6 +440,11 @@
 						"components": [
 							{
 								"internalType": "uint256",
+								"name": "nodeId",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
 								"name": "itemId",
 								"type": "uint256"
 							},
@@ -387,6 +462,11 @@
 								"internalType": "bool",
 								"name": "isRetail",
 								"type": "bool"
+							},
+							{
+								"internalType": "string",
+								"name": "location",
+								"type": "string"
 							}
 						],
 						"internalType": "struct User.Stock[]",
@@ -460,25 +540,6 @@
 				"inputs": [
 					{
 						"internalType": "uint256",
-						"name": "_node",
-						"type": "uint256"
-					}
-				],
-				"name": "isLastNode",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
 						"name": "",
 						"type": "uint256"
 					}
@@ -494,6 +555,21 @@
 						"internalType": "uint256",
 						"name": "ownerId",
 						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "ownerName",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "ownerLocation",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "itemName",
+						"type": "string"
 					},
 					{
 						"internalType": "uint256",
@@ -550,6 +626,11 @@
 			},
 			{
 				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_userId",
+						"type": "uint256"
+					},
 					{
 						"internalType": "uint256",
 						"name": "_orderID",
@@ -609,17 +690,17 @@
 	},
 	"sources": {
 		"SupplyChain.sol": {
-			"keccak256": "0xc6e91ce79b50664ea49891f367975c9ec155c045fea963e1f8be441b69cfe3fb",
+			"keccak256": "0x68baf873bfe99278767530d982c0ab843f3a05ebe87bf01b1973460be09d11fa",
 			"urls": [
-				"bzz-raw://90535a64fa9b6948013bff167896610b070db69ca38b94644b70806e7aa20425",
-				"dweb:/ipfs/QmQo9HkdEv7ves6LJKxWVUvyHi81mfjpRL1px1WYSNGAMg"
+				"bzz-raw://3ab090972db3120eec7a0866ae204294db2fa513ee10ab407e373def22e74166",
+				"dweb:/ipfs/QmPqrfjzsgCH5AXTUypS2fjFnns8XwRs2NStvrSL2SQnjV"
 			]
 		},
 		"user.sol": {
-			"keccak256": "0x52b2454b0bdcd1cbb5dc868675dff79324bf44e1437cedd47a790b6c138a6caf",
+			"keccak256": "0x3fb0a02be131e0ca314934c48150962d5c6c2de27be5e7ee18f6bdf0ca5a3bfe",
 			"urls": [
-				"bzz-raw://ffdc52b4657c610ba32cc5730904ca8384562e4fa345572a0983e0438e89982f",
-				"dweb:/ipfs/QmQY56H9dBWAMucFQSSahvzDgeuKL9Vx1fWHEiLJ8MVhe8"
+				"bzz-raw://10192851d94ff511e93efc6c4033d0d9324e0844be8c0d3ecf0f2d9467727cd3",
+				"dweb:/ipfs/QmSTwCmb55Y13AejqeeDKVMTULtrZBZV9Z4XSrKCghtaaM"
 			]
 		}
 	},
