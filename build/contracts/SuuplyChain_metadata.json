@@ -218,12 +218,29 @@
 						"type": "address"
 					}
 				],
-				"name": "getIdfromAddress",
+				"name": "getCredentialsfromAddress",
 				"outputs": [
 					{
-						"internalType": "uint256",
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "userId",
+								"type": "uint256"
+							},
+							{
+								"internalType": "string",
+								"name": "userName",
+								"type": "string"
+							},
+							{
+								"internalType": "address",
+								"name": "userAddress",
+								"type": "address"
+							}
+						],
+						"internalType": "struct User.UserCredentials",
 						"name": "",
-						"type": "uint256"
+						"type": "tuple"
 					}
 				],
 				"stateMutability": "view",
@@ -358,6 +375,21 @@
 					{
 						"components": [
 							{
+								"internalType": "address",
+								"name": "ownerAddress",
+								"type": "address"
+							},
+							{
+								"internalType": "uint256",
+								"name": "ownerId",
+								"type": "uint256"
+							},
+							{
+								"internalType": "string",
+								"name": "ownerName",
+								"type": "string"
+							},
+							{
 								"internalType": "uint256",
 								"name": "nodeId",
 								"type": "uint256"
@@ -438,6 +470,21 @@
 				"outputs": [
 					{
 						"components": [
+							{
+								"internalType": "address",
+								"name": "ownerAddress",
+								"type": "address"
+							},
+							{
+								"internalType": "uint256",
+								"name": "ownerId",
+								"type": "uint256"
+							},
+							{
+								"internalType": "string",
+								"name": "ownerName",
+								"type": "string"
+							},
 							{
 								"internalType": "uint256",
 								"name": "nodeId",
@@ -690,17 +737,17 @@
 	},
 	"sources": {
 		"SupplyChain.sol": {
-			"keccak256": "0x1d2dad3b6fa12a07cc9e28280a8fab89f99cb43535877699a0a4dd74a147f3d4",
+			"keccak256": "0x7382cca5b466c506aa446e48975475d1c5e435e28031f95c13c6ee6eadd3fb5d",
 			"urls": [
-				"bzz-raw://2b6ca9033ec4c27fa700db2ba955dcccdc97f2532f609198297288e90bf0d713",
-				"dweb:/ipfs/QmZ8wzoWtW1bJ1GD8sh6DwtcmcXgck4WQ2n3pKZDriR2fN"
+				"bzz-raw://65f3135b19378ed5a4acf2693a86b2cbfbc89691131179a60ac25c5581142398",
+				"dweb:/ipfs/QmfKintTLRaFc2tsPWJMPgLF6WqRw88QKefYhTFbCNxrZX"
 			]
 		},
 		"user.sol": {
-			"keccak256": "0x755eb2f0491e68e353ac8950012f8e91db05b052b4bf406f66b765dbc749476a",
+			"keccak256": "0x2ec7397434ccae58787ace2923fb56ed7a7b940fc3ef15993ebacf9c06563954",
 			"urls": [
-				"bzz-raw://4e91ca51ece0cc5d5a220947f41023cc02f12d16e8ab7dd371c5e478f4573931",
-				"dweb:/ipfs/QmaWFD6tN9X5HfMpUQrtJ3c73ayoMnUMdf3EAEsAwXg3kH"
+				"bzz-raw://d9536f5c48a1051f5d104e15e7412ff3468cd0bd687ff393bb31679f6a4b0fb4",
+				"dweb:/ipfs/QmXxNizMjAKicDmzEXet9i8umT7aU5iqRV7QPJboVccdaG"
 			]
 		}
 	},
