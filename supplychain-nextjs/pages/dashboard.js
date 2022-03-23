@@ -1,10 +1,15 @@
 import Link from 'next/link'
+import { useContext } from 'react';
+import AppContext from '../components/AppContext';
 
 export default function Dashboard(){
+    const contextApi = useContext(AppContext);
+    const {provider,setProvider,supplyContract,setSupplyContract,userID,setUserID,userName,setUserName} = contextApi;
+
     return(
         <div>
             <div className='flex justify-center w-full'>
-                <div className="flex flex-col items-center">
+                <div className="flex flex-col items-center text-white">
                     <Link href="/startchain">
                     <button
                         type="button"

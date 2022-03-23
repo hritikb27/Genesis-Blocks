@@ -1,28 +1,51 @@
 import Link from 'next/link'
-import { useState } from 'react'
+import { useState, useContext } from 'react'
+import AppContext from '../components/AppContext';
 
 export default function StartChain() {
     const [formData, setFormData] = useState({itemName:'',cost:2,retail:true,location:''});
+    const {provider, setProvider,supplyContract,setSupplyContract,userID,setUserID,userName,setUserName} = useContext(AppContext);
+    let nodeNum;
 
     function formChangeHandle(newItemName, newItemValue){
-        console.log(newItemValue)
+        console.log(newItemName,newItemValue)
         setFormData((prevState)=>{
             console.log(prevState)
             return {...prevState, [newItemName]: newItemValue}
         })
     }
+    
+    function generateRandomID(){
+        const randomNum1 = Math.floor(Math.random()*(10**8));
+        const randomNum2 = Math.floor(Math.random()*(10**8));
 
-    function sendNodeData(){
-        addStartingNode()
+        const finalNumID = (randomNum1+randomNum2)/2;
+        console.log(finalNumID);
+        return finalNumID;
     }
+
+    async function sendNodeData(){
+        const Supplyaddress = "0xeb589d38a1fb9ce91c917b80a6736c3f8d70ba74";
+        const itemID = generateRandomID();
+        nodeNum = await supplyContract.addStartingNode(userID,userName,itemID,formData.itemName, formData.location, formData.retail, formData.cost);
+        console.log(nodeNum)
+
+        
+    }
+    
+    async function test(){
+        const getUserTransactions = await supplyContract.getStock(userID)
+        console.log(getUserTransactions)
+    }
+
 
     return (
         <div className="w-full flex mt-6">
-            <div className='flex flex-col justify-center items-center w-full'>
-                <h1>Enter Product Details</h1>
-                <div className="w-[60%] sm:w-[40%] lg:w-[20%] mt-6 flex flex-col gap-4">
+            <div className='flex flex-col justify-center items-center w-full text-black'>
+                <h1 className='text-white'>Enter Product Details</h1>
+                <div className="w-[60%] sm:w-[40%] lg:w-[20%] mt-6 flex flex-col gap-4 ">
                     <div className="flex items-center w-full justify-between">
-                        <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                        <label htmlFor="email" className="block text-sm font-medium text-white">
                             Item Name
                         </label>
                         <div className="mt-1">
@@ -39,7 +62,7 @@ export default function StartChain() {
                     </div>
 
                     <div className="flex items-center w-full justify-between">
-                        <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                        <label htmlFor="email" className="block text-sm font-medium text-white">
                             Cost
                         </label>
                         <div className="mt-1">
@@ -56,7 +79,7 @@ export default function StartChain() {
                     </div>
 
                     <div className="flex items-center w-full justify-between">
-                        <label htmlFor="location" className="block text-sm font-medium text-gray-700 w-[50%] ">
+                        <label htmlFor="location" className="block text-sm font-medium w-[50%] text-white">
                             Is it Retail?
                         </label>
                         <div className="w-[49%] mt-1">
@@ -75,7 +98,7 @@ export default function StartChain() {
                     </div>
 
                     <div className="flex items-center w-full justify-between">
-                        <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                        <label htmlFor="email" className="block text-sm font-medium text-white">
                             Location:
                         </label>
                         <div className="mt-1">
