@@ -52,7 +52,7 @@ contract SupplyChain is User {
     nodes[node] = Node(msg.sender, _userId, _userName, _location, _itemName, _itemId, firstPrecedent, _isRetail, _cost);
     lastNodes[_itemId]=node;
     itemIdtoOwnerIdtoNodeId[_itemId][_userId]= node;
-    userStock[_userId].push(Stock(node, _itemId, _itemName,_cost,_isRetail, _location));
+    userStock[_userId].push(Stock(userIdtoAddress[_userId], _userId, _userName, node, _itemId, _itemName,_cost,_isRetail, _location));
     totalNodes+=1;
     emit StartingNode(node);
     return node;
@@ -71,26 +71,7 @@ contract SupplyChain is User {
        // Buyer should pay the exact amount of the previous node
       require (msg.value == nodes[prevNodeId].cost);  
    
-      if(itemIdtoOwnerIdtoNodeId[_itemId][_userId] == 0) {   //First time taking raw material for a particular node (itemid,owner)
-        uint[] memory firstPrecedent= new uint[](1);     //way to create dynamic "memory" array in Solidity
-        firstPrecedent[0]=prevNodeId;   
-        nodes[totalNodes]= Node(userIdtoAddress[_userId], _userId, _userName, _location, _itemName, _itemId, firstPrecedent, _isRetail, _cost);
-       // uint node= totalNodes;
-        itemIdtoOwnerIdtoNodeId[_itemId][_userId] = totalNodes;
-        lastNodes[_itemId]=totalNodes;
-        updateStockforBuyer(totalNodes, _userId,_itemId, _itemName, _isRetail, _cost, _location);
-        totalNodes+=1;
-
-      }
-
-      //
-      else{
-        uint currNodeId= itemIdtoOwnerIdtoNodeId[_itemId][_userId];
-        nodes[currNodeId].precedents.push(prevNodeId);
-        nodes[currNodeId].cost=_cost;
-        updateStockforBuyer(currNodeId, userId,_itemId, _itemName, _isRetail, _cost, _location);
-      }
-
+      addNode(prevNodeId, _userId, _userName, _location, _orderID, _itemId, _itemName, _isRetail, _cost);
       uint sellerId= nodes[prevNodeId].ownerId;
       
       deleteRequestedOrders(_userId, _orderID);
@@ -100,6 +81,29 @@ contract SupplyChain is User {
 
   }
 
+  function addNode(uint _prevNodeId, uint _userId, string memory _userName, string memory _location, uint _orderID, uint _itemId, string memory _itemName, bool _isRetail, uint _cost) internal {
+    
+    if(itemIdtoOwnerIdtoNodeId[_itemId][_userId] == 0) {   //First time taking raw material for a particular node (itemid,owner)
+        uint[] memory firstPrecedent= new uint[](1);     //way to create dynamic "memory" array in Solidity
+        firstPrecedent[0]=_prevNodeId;   
+        nodes[totalNodes]= Node(userIdtoAddress[_userId], _userId, _userName, _location, _itemName, _itemId, firstPrecedent, _isRetail, _cost);
+       // uint node= totalNodes;
+        itemIdtoOwnerIdtoNodeId[_itemId][_userId] = totalNodes;
+        lastNodes[_itemId]=totalNodes;
+        updateStockforBuyer(totalNodes, userIdtoAddress[_userId], _userId, _userName, _itemId, _itemName, _isRetail, _cost, _location);
+        totalNodes+=1;
+
+      }
+
+      //
+      else{
+        uint currNodeId= itemIdtoOwnerIdtoNodeId[_itemId][_userId];
+        nodes[currNodeId].precedents.push(_prevNodeId);
+        nodes[currNodeId].cost=_cost;
+          updateStockforBuyer(currNodeId, userIdtoAddress[_userId], userId, _userName, _itemId, _itemName, _isRetail, _cost, _location);
+      }
+
+  }
 
   function isLastNode(uint _node) internal view returns (bool) {
 
