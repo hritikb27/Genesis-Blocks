@@ -3,6 +3,9 @@ pragma solidity >=0.4.22 <0.9.0;
 contract User {
 
   struct Stock {
+    address ownerAddress;
+    uint ownerId;
+    string ownerName;
     uint nodeId;
     uint itemId;
     string itemName;
@@ -43,10 +46,10 @@ contract User {
   uint userId=1;
   UserCredentials[] users;
   mapping(uint => address) public userIdtoAddress;
-  mapping (address => uint) userAddresstoId;
+  mapping (address => UserCredentials) userAddresstoCredentials;
   
-  function getIdfromAddress(address _userAddress) external view returns (uint) {
-    return userAddresstoId[_userAddress];
+  function getCredentialsfromAddress(address _userAddress) external view returns (UserCredentials memory) {
+    return userAddresstoCredentials[_userAddress];
   }
 
   function addNewUser(string memory _userName, address _userAddress) external returns(uint) {
@@ -55,9 +58,9 @@ contract User {
    uint temp_userId= userId;
     users.push(UserCredentials(userId,_userName, _userAddress));
     userIdtoAddress[userId] = _userAddress;
-    userAddresstoId[_userAddress] = _userId;
+    userAddresstoCredentials[_userAddress] = UserCredentials(userId, _userName, _userAddress);
     userId++;
-     emit UserAdded(temp_userId);
+    emit UserAdded(temp_userId);
     return temp_userId;
 
    
@@ -94,10 +97,10 @@ contract User {
       return userRequestedOrder[_userId];
   }
 
-  function updateStockforBuyer(uint _nodeId, uint _buyerId,  uint _itemId,  string memory _itemName, bool _isRetail, uint _cost, string memory _location) internal {
+  function updateStockforBuyer(uint _nodeId, address _userAddress, uint _userId, string memory _userName, uint _itemId,  string memory _itemName, bool _isRetail, uint _cost, string memory _location) internal {
 
-      userStock[_buyerId].push(Stock(_nodeId, _itemId, _itemName,_cost,_isRetail, _location));
-      userIdtoItemIdtoStockInd[_buyerId][_itemId] = userStock[_buyerId].length -1;
+      userStock[_userId].push(Stock(_userAddress, _userId, _userName, _nodeId, _itemId, _itemName,_cost,_isRetail, _location));
+      userIdtoItemIdtoStockInd[_userId][_itemId] = userStock[_userId].length -1;
   }
 
   function updateStockforSeller(uint _sellerId, uint _itemId) internal {
