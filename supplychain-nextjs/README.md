@@ -1,34 +1,38 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+**Introduction**
+Supply Chain is a complicated network involving multiple processes and stakeholders. The transparency in the supply chain is emerging as a fundamental feature of business continuity
+and high product quality. To make the process seamless and transparent we have designed the ‘Modern Supply Chain’ dapp which helps trace the product movement right from its inception to the handover to retail shops.
 
-## Getting Started
 
-First, run the development server:
+**Problem it solves**
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+As a consumer, we are worried about the quality of products available at the retail store, their origin, etc. For example, when we buy fruits, vegetables, eggs, meat, it would be really helpful to know the origin source of the product and how old it is. Also, the intermediaries in the supply chain have to ensure the products that they’re getting from their precedents in the chain are upto the mark. We have used the immutability and traceability of blockchain to stimulate a supply chain model which can help all the players in the supply chain to access the history of the product upto that player right from its inception. Basically, this encapsulates the various stages of transformations that the product had to go through before the final product became available. 
+Eg: Final product: Cotton Shirt.
+The chain would start right from the farmer growing the cotton for that shirt. The intermediary nodes in the chain would include spinning and knitting, dyeing, printing, logistics, and retail. Like every single transformation involved in the process until the final product (Shirt, in this case) is available at the retail store.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+**Technologies Used/ Approach**
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+We have used the power of decentralization and immutability of blockchain with the traceability of a Directed Acyclic Graph (DAG) to model the supply chain.
+Each node in the graph corresponds to a particular itemID and ownerID. The node also has other information like owner’s location, item name, etc. 
+From one node there can be two possible transfers of an item:
+The item is handed over as it is (without any transformation, eg. to a logistic company) to the child node. In this case the item id of the item remains unchanged.
+The item is transformed and passed on to the child node. In this case, the item id is altered.
 
-## Learn More
+These two cases are illustrated in the images below. For simplicity we have just shown the itemID and ownerID in the individual nodes.
 
-To learn more about Next.js, take a look at the following resources:
+![Untitled Diagram drawio](https://user-images.githubusercontent.com/86529959/160292081-4cfcb7d3-325e-4393-9819-1f2672cab142.png)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Now, one node can receive raw materials from multiple owners (which are its precedent nodes) and convert them to a different item (having a unique itemID). This is shown in the below picture.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+![Untitled Diagram drawio (1)](https://user-images.githubusercontent.com/86529959/160292107-b2e9dde8-c806-40b1-b8a8-a801b85e307c.png)
 
-## Deploy on Vercel
+So, the overall graph would look something like this. This is a simplified view after omitting the internal information stored in the individual nodes, just to give an idea of the flow. 
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+![Untitled Diagram drawio (2)](https://user-images.githubusercontent.com/86529959/160292119-2dbe1801-f4f6-4679-9339-2b986ba7672a.png)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Notice that we travel the graph backwards, i.e., from the latest state of the item right upto the origin. This enables backward traceability.
+
+
+**Technologies Used:** Solidity, Truffle, Ganache, Chai, React, NextJS, TailwindCSS, EthersJS.
+
