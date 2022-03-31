@@ -2,56 +2,51 @@ import { useContext, useEffect, useState } from "react"
 import useSWR from "swr";
 import AppContext from "../components/AppContext"
 import bigNumber from "big-number";
+import { ethers } from "ethers";
 
 export default function PlaceOrder() {
-    const {supplyContract, currentAddress, users} = useContext(AppContext);
+    const {supplyContract, currentAddress, users, userID, provider} = useContext(AppContext);
     const [state, setState] = useState([])
-    let userProds = [];
 
-    // const fetcher = ()=>{
-        
-    //     return userProds;
-    // }
-    
-    // const {data, error} = useSWR('getSupplyContractData', fetcher);
+    const handleOrders = async(e)=>{
+        const itemID = e.target.parentNode.getAttribute('data-itemID');
+        const ownerID = e.target.parentNode.getAttribute('data-ownerID');
+        const itemName = e.target.parentNode.getAttribute('data-itemName');
+        console.log('orderRequest DATA PASSING ',userID,itemID, itemName, ownerID)
+        await supplyContract.orderRequest(userID,itemID, itemName, ownerID);
+
+        supplyContract.on("orderRequested", (from, to, value, event) => {
+            console.log({from, to, value, event})
+            console.log('Order ID: ', to.args[0].toNumber())
+            const orderID = to.args[0].toNumber();
+        });
+    }
 
 
     useEffect(()=>{
-
-        // async function userData(){
-        //     console.log(users)
-        //     const getOneUserData = await supplyContract.getStock(users[2].userId);
-        //     userProds.push(getOneUserData)
-        //     console.log(userProds[0][0][2]);
-        //     setState(prev=>!prev)
-        // }
         users.map(async(user)=>{
+            console.log('USER',user)
             if(user.userAddress==currentAddress){
                 console.warn('You are the user', user.userAddress);
                 return;
             }
-        //     
-            const userdata = await supplyContract.getStock(user.userId)
-            if(userdata.includes(Object)){
-                console.log('Object Found')
-            }
+
+            const userIDINT = user.userId.toNumber();
+            
+            const userdata = await supplyContract.getStock(userIDINT)
+            console.log('USER DATA', userdata)
 
             const StringObj = userdata.map(data=>{
-                console.log('String DATA',data);
+
                 return data.map(item=>{
-                    console.log('String ITEM', String(item))
                     return String(item)
                 });
             })
-            console.log('StringObj', StringObj)
             setState(prev=>[...prev, StringObj])
-        //         
-            
             
         })
-
-        // userData();
     },[])
+
     
     return (
         <div className="w-full flex mt-6 text-white">
@@ -61,11 +56,12 @@ export default function PlaceOrder() {
                     {state.length>=1 && state.map(user=>{
                         return user.map(item=>{
                             return <div key={item} className='bg-gray-500 w-[15%] h-[250px] rounded-lg text-xl flex flex-col justify-center items-between'>
-                                <table className="text-center flex flex-col gap-4 items-center">
+                                <table data-itemID={item[4]} data-ownerID={item[1]} data-itemName={item[5]} className="text-center flex flex-col gap-4 items-center">
                                 <tr>{item[2]}</tr>
-                                <tr>${item[3]}</tr>
                                 <tr>{item[5]}</tr>
-                                <button className="w-[50%] h-[30px] rounded-md bg-red-500">Order</button>
+                                <tr>${item[6]}</tr>
+                                <tr>{item[8]}</tr>
+                                <button className="w-[50%] h-[30px] mx-auto rounded-md bg-red-500" onClick={(e)=>handleOrders(e)}>Order</button>
                                 </table>
                                 <br/>
                             </div>
@@ -77,14 +73,7 @@ export default function PlaceOrder() {
                         })
                     })}
                 </div>
-                <div className='ml-4 flex justify-start w-[10%]'>
-                    <button
-                        type="button"
-                        className="inline-flex w-[6vw] h-[41px] mr-4 mt-6 items-center justify-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                    >
-                        Ok
-                    </button>
-                </div>
+                
             </div>
         </div>
     )

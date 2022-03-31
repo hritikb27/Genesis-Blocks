@@ -8,7 +8,7 @@ export default function HomePage() {
   const [walletConnecting, setWalletConnecting] = useState(false);
   const [buttonText, setButtonText] = useState('')
   const [isMetaMaskInstalled, setIsMetaMaskInstalled] = useState('')
-  const {provider, setProvider,setSupplyContract,setUserID, setCurrentAddress,setUsers} = useContext(AppContext);
+  const {provider, setProvider,setSupplyContract,setUserID,userID, setCurrentAddress,setUsers, setUserName} = useContext(AppContext);
 
   const initialize = () => {
     //Created check function to see if the MetaMask extension is installed
@@ -44,7 +44,7 @@ export default function HomePage() {
       setProvider(provider);
       const accounts = await provider.send("eth_requestAccounts", []);
       if (accounts) {
-        const Supplyaddress = "0x8b085d43cad1a8c82696e46a075e9cc450cc8c36";
+        const Supplyaddress = "0x44b1dab6a7a37bbf6bc2b8d9b221231538da161f";
         const signer = provider.getSigner();
         const currentAddress = await signer.getAddress();
         setCurrentAddress(currentAddress);
@@ -52,11 +52,14 @@ export default function HomePage() {
         const SupplyContract = new ethers.Contract(Supplyaddress, abi, signer);
         setSupplyContract(SupplyContract);
         const users = await SupplyContract.getUsers();
+        console.log('USERS',users);
         setUsers(users)
-        const userID = await SupplyContract.getIdfromAddress(currentAddress);
-        const userIdInt = userID.toNumber();
+        const userID = await SupplyContract.getCredentialsfromAddress(currentAddress);
+        console.log(userID);
+        const userIdInt = userID.userId.toNumber();
+        console.log('User ID INT',userIdInt);
         setUserID(userIdInt);
-
+        setUserName(userID.userName);
         let isUserFound = false;
 
         async function checkUser() {
@@ -70,17 +73,11 @@ export default function HomePage() {
           })
 
           if (!isUserFound) {
-            const userName = prompt("Enter a username: ")
-            console.log(userName, currentAddress);
-            const userID = await SupplyContract.addNewUser(userName, currentAddress);
-            const confirmTransaction = await userID.wait(2)
-            if(confirmTransaction){
-              console.log(confirmTransaction)
-              Router.push('/dashboard')
-            }
+            Router.push('/addnewuser');
           }
         }
         checkUser();
+        
       }
     }
     catch (error) {
@@ -110,7 +107,7 @@ export default function HomePage() {
 
   return (
     <div>
-      <h1 className='text-white text-center text-xl font-semi-bold pt-12'>Welcome to the Decentralized Supply Chain!</h1>
+      <h1 className='text-white text-center text-xl font-semi-bold pt-12'>Welcome to Genesis Blocks - A Decentralized Supply Chain!</h1>
       <div className=' w-full h-full flex justify-center items-center'>
 
         <button

@@ -20,24 +20,17 @@ export default function StartChain() {
         const randomNum2 = Math.floor(Math.random()*(10**8));
 
         const finalNumID = (randomNum1+randomNum2)/2;
-        console.log(finalNumID);
-        return finalNumID;
+        const intNumID = parseInt(finalNumID)
+        return intNumID;
     }
 
     async function sendNodeData(){
-        const Supplyaddress = "0xeb589d38a1fb9ce91c917b80a6736c3f8d70ba74";
         const itemID = generateRandomID();
+        console.log(itemID);
+        console.log('USER NAME', userName);
         nodeNum = await supplyContract.addStartingNode(userID,userName,itemID,formData.itemName, formData.location, formData.retail, formData.cost);
-        console.log(nodeNum)
-
-        
+        setFormData({itemName:'',cost:2,retail:true,location:''})
     }
-    
-    async function test(){
-        const getUserTransactions = await supplyContract.getStock(userID)
-        console.log(getUserTransactions)
-    }
-
 
     return (
         <div className="w-full flex mt-6">
